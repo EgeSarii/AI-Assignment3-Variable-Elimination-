@@ -1,5 +1,6 @@
 """
 @Author: Joris van Vugt, Moira Berens, Leonieke van den Bulk
+         Ege Sari
 
 Class for the implementation of the variable elimination algorithm.
 

@@ -1,5 +1,6 @@
 """
 @Author: Joris van Vugt, Moira Berens, Leonieke van den Bulk
+         Ege Sari
 
 Representation of a Bayesian network read in from a .bif file.
 
@@ -98,7 +99,7 @@ class BayesNet():
         end = line.find('}')
         values = [value.strip() for value in line[start:end].split(',')]
         self.values[variable] = values
-
+    
     def parse_parents(self, line):
         """
         Find out what variables are the parents

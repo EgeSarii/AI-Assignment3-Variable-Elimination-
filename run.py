@@ -1,5 +1,6 @@
 """
 @Author: Joris van Vugt, Moira Berens, Leonieke van den Bulk
+         Ege Sari
 
 Entry point for the creation of the variable elimination algorithm in Python 3.
 Code to read in Bayesian Networks has been provided. We assume you have installed the pandas package.
