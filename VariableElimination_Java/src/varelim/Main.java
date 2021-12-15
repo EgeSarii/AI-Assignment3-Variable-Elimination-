@@ -1,4 +1,5 @@
 package varelim;
+import varelim.Factor;
 
 import java.util.ArrayList;
 
@@ -25,7 +26,15 @@ public class Main {
 		
 		// Print variables and probabilities
 		ui.printNetwork();
+		System.out.println("adasasfbgfadf");
+		Factor f1 = new Factor(ps.get(3));
+		Factor f2 = new Factor(ps.get(4));
+		Factor f3 = Factor.production(f1, f2);
+		System.out.println(f3.getTable().toString());
+		System.out.println(f3.getVariables().toString());
 		
+		
+
 		// Ask user for query
 		ui.askForQuery(); 
 		Variable query = ui.getQueriedVariable(); 

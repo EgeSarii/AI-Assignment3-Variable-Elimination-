@@ -1,0 +1,6 @@
+15.12.2021
+----------
+Bunu hakikaten sonradan OKU!
+Ne yazık ki table lar için variables yerine main variable ve parent var.
+Bu düzeltilebilir yani Table.java düzeltilebilir ancak tüm sistemi değiştirmek istemediğim için
+değiştirmeyeceğim.
