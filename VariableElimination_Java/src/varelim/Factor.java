@@ -33,7 +33,11 @@ public class Factor {
         this.table = table;
         ArrayList <Variable>variables = new ArrayList<>();
         variables.add(table.getVariable());
-        variables.addAll(table.getParents());
+        if(table.getVariable().hasParents())
+        {
+            variables.addAll(table.getParents());
+        }
+        
         this.variables = variables;
     }
 
@@ -48,10 +52,20 @@ public class Factor {
         Factor f3;
         //Find the common variable(s)
         ArrayList<Variable> commonVariables = getCommonVariables(f1, f2);
-
+        ArrayList<ProbRow> newTable = new ArrayList<>();
         if(commonVariables.size()==0)
         {
-            throw new IllegalArgumentException("No common variables!");
+            for(int i=0; i< f1.table.size(); i++ )
+            {
+                ProbRow prowf1 = f1.table.get(i);
+                for(int j=0; j<f2.table.size(); j++)
+                {
+                    ProbRow prowf2 = f2.table.get(j);
+                    ProbRow newRow = makeProductRow(prowf1, prowf2);
+                    newTable.add(newRow);
+                }
+            }
+            f3 = new Factor(getUnionVariables(f1, f2), newTable);
         }
         else if (commonVariables.size() ==1)
         {
@@ -59,7 +73,7 @@ public class Factor {
             int commonIndexf1 = f1.variables.indexOf(common);
             int commonIndexf2 = f2.variables.indexOf(common);
             
-            ArrayList<ProbRow> newTable = new ArrayList<>();
+            
             for(int i=0; i< f1.table.size(); i++ )
             {
                 ProbRow prowf1 = f1.table.get(i);
@@ -68,7 +82,7 @@ public class Factor {
                     ProbRow prowf2 = f2.table.get(j);
                     if(prowf1.getValues().get(commonIndexf1).equals(prowf2.getValues().get(commonIndexf2)))
                     {
-                        ProbRow newRow = makeUnionRow(prowf1, prowf2, commonIndexf2);
+                        ProbRow newRow = makeProductRow(prowf1, prowf2, commonIndexf2);
                         newTable.add(newRow);
                     }
                 }
@@ -109,7 +123,7 @@ public class Factor {
         return unionVariables;
     }
 
-    public static ProbRow makeUnionRow (ProbRow row1, ProbRow row2, int commonIndex)
+    public static ProbRow makeProductRow (ProbRow row1, ProbRow row2, int commonIndex)
     {
         ArrayList<String> newValues = row1.getValues(); 
         for(int i =0; i< row2.getValues().size(); i++ )
@@ -118,6 +132,18 @@ public class Factor {
             {
                 newValues.add(row2.getValues().get(i));
             }
+        }
+        ProbRow newRow = new ProbRow(newValues, (row1.getProb() * row2.getProb()));
+        return newRow;
+    }
+    public static ProbRow makeProductRow (ProbRow row1, ProbRow row2)
+    {
+        ArrayList<String> newValues = row1.getValues(); 
+        System.out.println(row1.getValues().size());
+        System.out.println(row2.getValues().size());
+        for(int i =0; i< row2.getValues().size(); i++ )
+        {
+            newValues.add(row2.getValues().get(i));    
         }
         ProbRow newRow = new ProbRow(newValues, (row1.getProb() * row2.getProb()));
         return newRow;
