@@ -1,6 +1,5 @@
 package varelim;
 
-import java.time.chrono.ThaiBuddhistChronology;
 import java.util.ArrayList;
 
 public class Factor {
@@ -62,7 +61,6 @@ public class Factor {
                 {
                     ProbRow prowf2 = f2.table.get(j);
                     ProbRow newRow = makeProductRow(prowf1, prowf2);
-                    newRow.getValues().size();
                     newTable.add(newRow);
                 }
             }
@@ -96,6 +94,12 @@ public class Factor {
         }
         return f3;
     }
+
+/* 
+  * ======================================
+  * Factor Production Helper Operations
+  * ======================================
+  */
 
     /**
      * A method to get common variables of Factor f1 and Factor f2
@@ -176,6 +180,34 @@ public class Factor {
         ProbRow newRow = new ProbRow(newValues, (row1.getProb() * row2.getProb()));
         return newRow;
     }
+
+/* 
+  * ======================================
+  * Factor Production Helper Operations
+  * ======================================
+  */
+   
+   public ProbRow makeSumRow (ArrayList<ProbRow> rowList, int varIndex)
+   {
+        ArrayList<ProbRow> rowsToBeSummed = new ArrayList<>();
+
+        while(! rowList.isEmpty())
+        {
+            ProbRow firstRow = rowList.get(0);
+            for(int i = 1; i < rowList.size() ; i++)
+            {
+                for(int j=0; j<firstRow.getValues().size();  j++)
+                {
+                    if(j!=varIndex && (rowList.get(i).getValues().get(j) == firstRow.getValues().get(j)))
+                    {
+                        
+                    }
+                }
+            }
+        }
+        
+
+   }
 
  /* 
   * =====================

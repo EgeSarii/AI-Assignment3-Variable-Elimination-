@@ -1,5 +1,4 @@
 package varelim;
-import varelim.Factor;
 
 import java.util.ArrayList;
 
