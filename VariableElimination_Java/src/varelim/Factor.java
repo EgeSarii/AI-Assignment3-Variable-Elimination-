@@ -62,6 +62,7 @@ public class Factor {
                 {
                     ProbRow prowf2 = f2.table.get(j);
                     ProbRow newRow = makeProductRow(prowf1, prowf2);
+                    newRow.getValues().size();
                     newTable.add(newRow);
                 }
             }
@@ -96,6 +97,12 @@ public class Factor {
         return f3;
     }
 
+    /**
+     * A method to get common variables of Factor f1 and Factor f2
+     * @param f1 Factor f1
+     * @param f2 Factor f2
+     * @return commonVariables, a list of all common variables
+     */
     public static ArrayList<Variable> getCommonVariables (Factor f1, Factor f2)
     {
         ArrayList<Variable> commonVariables = new ArrayList<>();
@@ -108,6 +115,13 @@ public class Factor {
         }   
         return commonVariables;
     }
+    
+    /**
+     * A method to get the union of variable lists of two factors
+     * @param f1 Factor f1
+     * @param f2 Factor f2
+     * @return unionVariables, a union variable list of variables of f1 and f2
+     */
     public static ArrayList<Variable> getUnionVariables (Factor f1, Factor f2)
     {
         ArrayList<Variable> variablesToBeAdded = new ArrayList<>();
@@ -123,9 +137,17 @@ public class Factor {
         return unionVariables;
     }
 
+    /**
+     *  A method to make a row production with common variable
+     * @param row1 Row 1 
+     * @param row2 Row 2
+     * @param commonIndex The index of the common variable in Row 2
+     * @return newRow, a new row that production of Row 1 and Row 2 regarding the common variable.
+     */
     public static ProbRow makeProductRow (ProbRow row1, ProbRow row2, int commonIndex)
     {
-        ArrayList<String> newValues = row1.getValues(); 
+        ArrayList<String> newValues = new ArrayList<>();
+        newValues.addAll(row1.getValues());
         for(int i =0; i< row2.getValues().size(); i++ )
         {
             if(i!= commonIndex)
@@ -136,11 +158,17 @@ public class Factor {
         ProbRow newRow = new ProbRow(newValues, (row1.getProb() * row2.getProb()));
         return newRow;
     }
+    
+    /**
+     *  A method to make a row production without common variable
+     * @param row1 Row 1 
+     * @param row2 Row 2
+     * @return newRow, a new row that production of Row 1 and Row 2 
+     */
     public static ProbRow makeProductRow (ProbRow row1, ProbRow row2)
     {
-        ArrayList<String> newValues = row1.getValues(); 
-        System.out.println(row1.getValues().size());
-        System.out.println(row2.getValues().size());
+        ArrayList<String> newValues = new ArrayList<>();
+        newValues.addAll(row1.getValues()); 
         for(int i =0; i< row2.getValues().size(); i++ )
         {
             newValues.add(row2.getValues().get(i));    
