@@ -30,11 +30,15 @@ public class Main {
 		Factor f2 = new Factor(ps.get(4));
 		Factor f3 = Factor.production(f1, f2);
 		
-		System.out.println(f3.getTable().toString());
-		Factor f4  = Factor.sumOut(f3, f3.getVariables().get(1));
+		System.out.println(f3.getTable().toString()+'\n');
+		Factor f4  = Factor.marginalization(f3, f3.getVariables().get(1));
 
-		System.out.println(f4.getTable().toString());
+		System.out.println(f4.getTable().toString()+'\n');
 
+		String val =f4.getTable().get(0).getValues().get(1);
+		Factor f5 = Factor.reduction(f4, f4.getVariables().get(1) ,val);
+
+		System.out.println(f5.getTable().toString()+'\n');
 		
 		/*
 
