@@ -45,7 +45,12 @@ public class Factor {
   * Factor Operations
   * =====================
   */
-
+    /**
+     *  Factor production of two factors
+     * @param f1 Factor f1 
+     * @param f2 Factor f2
+     * @return f3, the result of factor production for f1 and f2
+     */
     public static Factor production (Factor f1 , Factor f2)
     {
         Factor f3;
@@ -93,6 +98,46 @@ public class Factor {
             throw new IllegalArgumentException("I am sorry but there are more than one common varibles!");
         }
         return f3;
+    }
+    /**
+     *  Factor summation-out operation
+     * @param f1 Factor f1
+     * @param var Variable to be summed-out
+     * @return f2 a new factor resulted by summation-out of f1
+     */
+    public static Factor sumOut(Factor f1, Variable var)
+    {
+
+        ArrayList<ProbRow> newTable = new ArrayList<>();
+        ArrayList<Variable> allVariables= f1.getVariables();
+        int varIndex = allVariables.indexOf(var);
+        ArrayList <ProbRow> table = f1.getTable().getTable();
+ 
+        while(!table.isEmpty())
+        {
+            ProbRow firstRow = table.remove(0);
+            ArrayList<ProbRow> rowsDeleted = new ArrayList<>();
+            ArrayList<ProbRow> rowList = new ArrayList<>();
+            rowList.add(firstRow);
+            for (int i= 0; i< table.size(); i++)
+            {
+                if(rowMatches(varIndex, firstRow, table.get(i)))
+                {
+                    rowList.add(table.get(i));
+                    rowsDeleted.add(table.get(i));
+                }
+            }
+            for(ProbRow r : rowsDeleted)
+            {
+                table.remove(r);
+            }
+            newTable.add(sumOutRow(varIndex, rowList));
+            
+        }
+        allVariables.remove(var);
+        Factor f2 = new Factor(allVariables, newTable);
+        return f2;
+
     }
 
 /* 
@@ -183,32 +228,44 @@ public class Factor {
 
 /* 
   * ======================================
-  * Factor Production Helper Operations
+  * Factor Summation Helper Operations
   * ======================================
   */
    
-   public ProbRow makeSumRow (ArrayList<ProbRow> rowList, int varIndex)
-   {
-        ArrayList<ProbRow> rowsToBeSummed = new ArrayList<>();
-
-        while(! rowList.isEmpty())
+    /**
+     *  A helper function for sum-out operation.
+     * @param varIndex
+     * @param rowList
+     * @return new ProbRow, a new row built according to the sum-out operation
+     */
+    public static ProbRow sumOutRow (int varIndex, ArrayList<ProbRow> rowList)
+    {
+        ArrayList<String> values= new ArrayList<>();
+        values = rowList.get(0).getValues();
+        values.remove(varIndex);
+        double prob =0.0;
+        for(int i = 0; i< rowList.size(); i++)
         {
-            ProbRow firstRow = rowList.get(0);
-            for(int i = 1; i < rowList.size() ; i++)
+            prob = prob + rowList.get(i).getProb();
+        }
+        return new ProbRow(values, prob);
+    } 
+
+    public static Boolean rowMatches(int varIndex, ProbRow row1, ProbRow row2 )
+    {
+        ArrayList<String> values1 = row1.getValues();
+        ArrayList<String> values2 = row2.getValues();
+
+        for(int i = 0; i< values1.size(); i++)
+        {
+            if((i!= varIndex && values1.get(i) != values2.get(i)) || 
+               (i==varIndex && values1.get(i) == values2.get(i) ))
             {
-                for(int j=0; j<firstRow.getValues().size();  j++)
-                {
-                    if(j!=varIndex && (rowList.get(i).getValues().get(j) == firstRow.getValues().get(j)))
-                    {
-                        
-                    }
-                }
+                return false;
             }
         }
-        
-
-   }
-
+        return true;
+    }
  /* 
   * =====================
   * Getter & Setter Functions

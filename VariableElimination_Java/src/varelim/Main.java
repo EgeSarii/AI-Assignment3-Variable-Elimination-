@@ -1,5 +1,6 @@
 package varelim;
 
+
 import java.util.ArrayList;
 
 /**
@@ -28,7 +29,12 @@ public class Main {
 		Factor f1 = new Factor(ps.get(3));
 		Factor f2 = new Factor(ps.get(4));
 		Factor f3 = Factor.production(f1, f2);
+		
 		System.out.println(f3.getTable().toString());
+		Factor f4  = Factor.sumOut(f3, f3.getVariables().get(1));
+
+		System.out.println(f4.getTable().toString());
+
 		
 		/*
 
