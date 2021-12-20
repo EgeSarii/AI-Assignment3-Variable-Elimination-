@@ -26,29 +26,25 @@ public class Main {
 		
 		// Print variables and probabilities
 		ui.printNetwork();
-		Factor f1 = new Factor(ps.get(3));
-		Factor f2 = new Factor(ps.get(4));
-		Factor f3 = Factor.production(f1, f2);
-		
-		System.out.println(f3.getTable().toString()+'\n');
-		Factor f4  = Factor.marginalization(f3, f3.getVariables().get(1));
-
-		System.out.println(f4.getTable().toString()+'\n');
-
-		String val =f4.getTable().get(0).getValues().get(1);
-		Factor f5 = Factor.reduction(f4, f4.getVariables().get(1) ,val);
-
-		System.out.println(f5.getTable().toString()+'\n');
-		
-		/*
-
 		// Ask user for query
 		ui.askForQuery(); 
 		Variable query = ui.getQueriedVariable(); 
 		
 		// Ask user for observed variables 
 		ui.askForObservedVariables(); 
-		ArrayList<Variable> observed = ui.getObservedVariables(); 
+		ArrayList<Variable> observed = ui.getObservedVariables();
+
+		
+		variableElimination (query, observed, vs, ps );		 
+	/* 
+		// Ask user for query
+		ui.askForQuery(); 
+		Variable query = ui.getQueriedVariable(); 
+		
+		// Ask user for observed variables 
+		//ui.askForObservedVariables(); 
+		ArrayList<Variable> observed = ui.getObservedVariables();
+		 
 		
 		// Turn this on if you want to experiment with different heuristics for bonus points (you need to implement the heuristics yourself)
 //		ui.askForHeuristic();
@@ -56,8 +52,30 @@ public class Main {
 		
 		// Print the query and observed variables
 		ui.printQueryAndObserved(query, observed);
-		
-		//PUT YOUR CALL TO THE VARIABLE ELIMINATION ALGORITHM HERE
 		*/
+		//PUT YOUR CALL TO THE VARIABLE ELIMINATION ALGORITHM HERE
 	}
+
+	public static void variableElimination (Variable query, ArrayList<Variable> observed, ArrayList<Variable> variables, ArrayList<Table> probabilities)
+	{
+		//creating factors by using reduction if there is an observed variable
+		ArrayList<Factor> factors = new ArrayList<>();
+		for (Table table : probabilities)
+		{
+			Factor newFactor = new Factor(table);
+			for (Variable obs : observed)
+			{
+				if (newFactor.getVariables().contains(obs))
+				{
+					newFactor = Factor.reduction(newFactor, obs, obs.getObservedValue());
+				}
+			}
+			factors.add (newFactor);
+			
+			newFactor.getTable().toString();
+		}
+		
+
+	}
+
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Factor {
     private Table table;
     private ArrayList<Variable> variables;
+    private double prob ;
 
     /**
      * Constructor of the Factor.
@@ -38,6 +39,17 @@ public class Factor {
         }
         
         this.variables = variables;
+    }
+    public Factor (double probability)
+    {
+        String name = "";
+        ArrayList<String> possibleValues = new ArrayList<>();
+        possibleValues.add("True");
+        Variable newVariable = new Variable(name, possibleValues);
+        variables.add(newVariable);
+        ProbRow blankRow = new ProbRow(possibleValues, probability);
+        this.table = new Table(this.variables, )
+        this.prob = probability;
     }
 
  /* 
@@ -135,6 +147,16 @@ public class Factor {
             
         }
         allVariables.remove(var);
+        if(allVariables.isEmpty())
+        {
+            double totalProb =0.0;
+            for(ProbRow row : newTable)
+            {
+                totalProb += row.getProb();
+            }
+            Factor f2 = new Factor(totalProb);
+            return f2;
+        }
         Factor f2 = new Factor(allVariables, newTable);
         return f2;
 
@@ -162,8 +184,17 @@ public class Factor {
             }
         }
         variables.remove(varIndex);
+        if(variables.isEmpty())
+        {
+            double totalProb =0.0;
+            for(ProbRow row : newTable)
+            {
+                totalProb += row.getProb();
+            }
+            Factor f2 = new Factor(totalProb);
+            return f2;
+        }
         Factor f2 = new Factor(variables, newTable);
-
         return f2;
     }
 
@@ -316,6 +347,11 @@ public class Factor {
     public ArrayList<Variable> getVariables()
     {
         return this.variables;
+    }
+
+    public double getProbability()
+    {
+        return this.prob;
     }
 
 }
