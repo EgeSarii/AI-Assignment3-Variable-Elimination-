@@ -42,13 +42,17 @@ public class Factor {
     }
     public Factor (double probability)
     {
-        String name = "";
+        String name = "Blank";
         ArrayList<String> possibleValues = new ArrayList<>();
         possibleValues.add("True");
         Variable newVariable = new Variable(name, possibleValues);
+        ArrayList<Variable> variables = new ArrayList<>();
         variables.add(newVariable);
+        this.variables = variables;
         ProbRow blankRow = new ProbRow(possibleValues, probability);
-        this.table = new Table(this.variables, )
+        ArrayList<ProbRow> newTable = new ArrayList<>();
+        newTable.add(blankRow);
+        this.table = new Table(newVariable, newTable);
         this.prob = probability;
     }
 

@@ -68,11 +68,12 @@ public class Main {
 				if (newFactor.getVariables().contains(obs))
 				{
 					newFactor = Factor.reduction(newFactor, obs, obs.getObservedValue());
+					newFactor.getTable().toString();
 				}
 			}
 			factors.add (newFactor);
-			
-			newFactor.getTable().toString();
+			System.out.println("anananana");
+			System.out.println( newFactor.getTable().toString());
 		}
 		
 
