@@ -111,7 +111,11 @@ public class Factor {
         }
         else
         {
+            System.out.println(f2.getTable().toString() );
+            System.out.println(f1.getTable().toString()+"\n" + f1.getProbability());
+            
             throw new IllegalArgumentException("I am sorry but there are more than one common varibles!");
+            
         }
         return f3;
     }
@@ -147,6 +151,7 @@ public class Factor {
             {
                 table.remove(r);
             }
+           
             newTable.add(sumOutRow(varIndex, rowList));
             
         }
@@ -172,20 +177,23 @@ public class Factor {
      * @param val
      * @return
      */
-    public static Factor reduction(Factor f1, Variable var, String val)
+    public static Factor reduction(Factor f1, Variable var)
     {
         ArrayList<Variable> variables = f1.getVariables();
         ArrayList<ProbRow> table = f1.getTable().getTable();
         ArrayList<ProbRow> newTable = new ArrayList<>(); 
         int varIndex = variables.indexOf(var);
+        
         for( ProbRow row : table)
         {
-            if(row.getValues().get(varIndex) == val)
+            
+            if(row.getValues().get(varIndex).equals( var.getObservedValue()))
             {
                 row.getValues().remove(varIndex);
                 newTable.add(row);
 
             }
+
         }
         variables.remove(varIndex);
         if(variables.isEmpty())
@@ -329,8 +337,8 @@ public class Factor {
 
         for(int i = 0; i< values1.size(); i++)
         {
-            if((i!= varIndex && values1.get(i) != values2.get(i)) || 
-               (i==varIndex && values1.get(i) == values2.get(i) ))
+            if((i!= varIndex && !values1.get(i).equals(values2.get(i))) || 
+               (i==varIndex && values1.get(i).equals( values2.get(i)) ))
             {
                 return false;
             }

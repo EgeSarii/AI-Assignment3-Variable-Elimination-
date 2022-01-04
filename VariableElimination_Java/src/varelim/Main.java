@@ -1,7 +1,9 @@
 package varelim;
 
 
+import java.net.CacheRequest;
 import java.util.ArrayList;
+import javax.xml.namespace.QName;
 
 /**
  * Main class to read in a network, add queries and observed variables, and run variable elimination.
@@ -67,16 +69,69 @@ public class Main {
 			{
 				if (newFactor.getVariables().contains(obs))
 				{
-					newFactor = Factor.reduction(newFactor, obs, obs.getObservedValue());
+					newFactor = Factor.reduction(newFactor, obs);
 					newFactor.getTable().toString();
 				}
 			}
 			factors.add (newFactor);
-			System.out.println("anananana");
-			System.out.println( newFactor.getTable().toString());
+		}
+
+		//Make a list of variables to be summed-out
+		ArrayList<Variable> varSumList = new ArrayList<>();
+		variables.remove(query);
+
+		//List of variables to be summed-out
+		varSumList = variables;
+
+		//List of factors that contain Variable Z
+
+		for(Variable var :varSumList)
+		{
+			
+			ArrayList<Factor> containsVarList = new ArrayList<>();
+			//find the factors contain Variable var and add to the list
+			for(Factor f : factors)
+			{
+				if(f.getVariables().contains(var))
+				{
+					containsVarList.add(f);
+				}
+			}
+			factors.removeAll(containsVarList);
+			for(Factor f : containsVarList)
+			{
+			//	System.out.println(f.getTable().toString() +" \n");
+			}
+			Factor facttttoorrr = multiply(containsVarList);
+			//System.out.println(facttttoorrr.getTable().toString() + " \n");
+			Factor newFactor = Factor.marginalization(facttttoorrr, var);
+			//System.out.println(newFactor.getTable() +" \n");
+
+			if(newFactor.getProbability()!=1.0 )
+			{
+				factors.add(newFactor);
+			}
 		}
 		
-
+		System.out.println(factors.get(0).getTable().toString());
 	}
 
+	public static Factor multiply (ArrayList<Factor> factors)
+	{
+		ArrayList<Factor> factorsToBeRemoved = new ArrayList<>();
+		if(factors.size() ==1)
+		{
+			return factors.get(0);
+		}
+		else
+		{
+			Factor result = Factor.production(factors.get(0), factors.get(1));
+			factorsToBeRemoved.add(factors.get(0));
+			factorsToBeRemoved.add(factors.get(1));
+			factors.removeAll(factorsToBeRemoved);
+			factors.add(result);
+			return multiply(factors);
+		}
+
+	}
 }
