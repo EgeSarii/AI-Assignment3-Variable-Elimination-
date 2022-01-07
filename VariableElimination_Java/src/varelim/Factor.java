@@ -2,30 +2,39 @@ package varelim;
 
 import java.util.ArrayList;
 
-public class Factor {
+
+/**
+ * Class to represent a factor.
+ * 
+ * @author Ege Sari
+ */
+
+public class Factor implements Cloneable{
     private Table table;
     private ArrayList<Variable> variables;
     private double prob ;
 
     /**
-     * Constructor of the Factor.
+     * Constructor of the Factor. It is used to initialize a factor with variable(s) and 
+     * probability rows.
      * @param variables
      * @param table
      */
     public Factor (ArrayList<Variable> variables, ArrayList<ProbRow> table)
     {
         this.variables = variables;
-        Variable temp = variables.get(0);
+        Variable first = variables.get(0);
         ArrayList<Variable> parents = new ArrayList<>();
         for(int i =1; i< variables.size(); i++)
         {
             parents.add(variables.get(i));
         }
-        temp.setParents(parents);
-        this.table = new Table(temp, table);
+        first.setParents(parents);
+        this.table = new Table(first, table);
     }
+
     /**
-     * Constructor of the Factor.
+     * Constructor of the Factor. It is used to 
      * @param table
      */
     public Factor (Table table)
@@ -40,6 +49,11 @@ public class Factor {
         
         this.variables = variables;
     }
+    
+    /**
+     * Constructor of the Factor.
+     * @param probability
+     */
     public Factor (double probability)
     {
         String name = "Blank";
@@ -54,6 +68,11 @@ public class Factor {
         newTable.add(blankRow);
         this.table = new Table(newVariable, newTable);
         this.prob = probability;
+    }
+
+    public Object clone() throws CloneNotSupportedException
+    {
+        return super.clone();
     }
 
  /* 
@@ -73,7 +92,8 @@ public class Factor {
         //Find the common variable(s)
         ArrayList<Variable> commonVariables = getCommonVariables(f1, f2);
         ArrayList<ProbRow> newTable = new ArrayList<>();
-        if(commonVariables.size()==0)
+        
+        if(commonVariables.size()==0) //if there is no common variable
         {
             for(int i=0; i< f1.table.size(); i++ )
             {
@@ -81,13 +101,14 @@ public class Factor {
                 for(int j=0; j<f2.table.size(); j++)
                 {
                     ProbRow prowf2 = f2.table.get(j);
-                    ProbRow newRow = makeProductRow(prowf1, prowf2);
+                    //Common variable index is -1 since there is no common variable
+                    ProbRow newRow = makeProductRow(prowf1, prowf2,-1);
                     newTable.add(newRow);
                 }
             }
             f3 = new Factor(getUnionVariables(f1, f2), newTable);
         }
-        else if (commonVariables.size() ==1)
+        else if (commonVariables.size() ==1) // if there is one common variable
         {
             Variable common = commonVariables.get(0);
             int commonIndexf1 = f1.variables.indexOf(common);
@@ -109,13 +130,9 @@ public class Factor {
             }
             f3 = new Factor(getUnionVariables(f1, f2), newTable);
         }
-        else
+        else // if there is more than one common variables  
         {
-            System.out.println(f2.getTable().toString() );
-            System.out.println(f1.getTable().toString()+"\n" + f1.getProbability());
-            
-            throw new IllegalArgumentException("I am sorry but there are more than one common varibles!");
-            
+            throw new IllegalArgumentException("I am sorry but there are more than one common varibles!");   
         }
         return f3;
     }
@@ -131,8 +148,9 @@ public class Factor {
         ArrayList<ProbRow> newTable = new ArrayList<>();
         ArrayList<Variable> allVariables= f1.getVariables();
         int varIndex = allVariables.indexOf(var);
-        ArrayList <ProbRow> table = f1.getTable().getTable();
- 
+        ArrayList <ProbRow> table = new ArrayList<>();
+        table = f1.getTable().getTable();
+
         while(!table.isEmpty())
         {
             ProbRow firstRow = table.remove(0);
@@ -151,7 +169,6 @@ public class Factor {
             {
                 table.remove(r);
             }
-           
             newTable.add(sumOutRow(varIndex, rowList));
             
         }
@@ -278,23 +295,6 @@ public class Factor {
         return newRow;
     }
     
-    /**
-     *  A method to make a row production without common variable
-     * @param row1 Row 1 
-     * @param row2 Row 2
-     * @return newRow, a new row that production of Row 1 and Row 2 
-     */
-    private static ProbRow makeProductRow (ProbRow row1, ProbRow row2)
-    {
-        ArrayList<String> newValues = new ArrayList<>();
-        newValues.addAll(row1.getValues()); 
-        for(int i =0; i< row2.getValues().size(); i++ )
-        {
-            newValues.add(row2.getValues().get(i));    
-        }
-        ProbRow newRow = new ProbRow(newValues, (row1.getProb() * row2.getProb()));
-        return newRow;
-    }
 
 /* 
   * ======================================
